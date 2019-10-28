@@ -2,6 +2,7 @@ let express = require("express");
 let morgan = require("morgan");
 let uuidv4 = require('uuid/v4');
 let bodyParser = require('body-parser');
+const cors = require('cors')
 let app = express();
 
 app.use(morgan("dev"));
@@ -17,7 +18,22 @@ const post = {
     publishedDate: Date
 }
 */
-var blogPosts = [];
+var blogPosts = [
+    {
+        "id":  uuidv4(),
+        "title": "abc",
+        "content": "def",
+        "author": "bob",
+        "publishedData": "27/10/2019"
+    },
+    {
+        "id":  uuidv4(),
+        "title": "zzz",
+        "content": "yyy",
+        "author": "carla",
+        "publishedData": "25/10/2019"
+    },
+];
 let blogPostFields = [
     "title", "content", "author", "publishedDate"
 ]
@@ -26,7 +42,7 @@ app.listen("8080", () => {
     console.log("Listening on port 8080");
 });
 
-app.get("/blog-posts", (req, res, next) => {
+app.get("/blog-posts", cors(), (req, res, next) => {
     res.status(200).json(blogPosts);
 });
 
