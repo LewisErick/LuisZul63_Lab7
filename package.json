@@ -1,0 +1,31 @@
+{
+  "name": "blog-post",
+  "version": "1.0.0",
+  "description": "Node Homework for Lab 7 Web A00818663",
+  "main": "server.js",
+  "scripts": {
+    "test": "test-blog-post",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/LewisErick/LuisZul63_Lab7.git"
+  },
+  "keywords": [
+    "blog",
+    "post",
+    "web",
+    "lab7"
+  ],
+  "author": "Luis Erick Zul Rabasa",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/LewisErick/LuisZul63_Lab7/issues"
+  },
+  "homepage": "https://github.com/LewisErick/LuisZul63_Lab7#readme",
+  "dependencies": {
+    "express": "^4.17.1",
+    "morgan": "^1.9.1",
+    "uuid": "^3.3.3"
+  }
+}
