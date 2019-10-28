@@ -1,29 +1,31 @@
-let url = "http://localhost:8080/blog-posts";
-
-function refreshList() {
-    $.getJSON(url, (res) =>  {
-        if (res.ok) {
-            return res.json();
-        }
-        throw "Something wrong happened. Please try again";
-    })
-    .then(function(resposneJSON) {
-        var ht = "";
-
-        $.each(resposneJSON, function(i, val) {
-            ht += `
-                <li>${JSON.stringify(val)}</li>
-            `;
-        });
-
-        $("#postList").html(ht);
-    })
-    .catch(function(error) {
-        $("#error").html(error);
-    });
-}
+let url = "http://localhost:8080/blog-posts/";
 
 $(document).ready(function() {
+
+    function refreshList() {
+
+        $.ajax({
+            url: url,
+            type: 'GET',
+            success: function(responseJSON) {
+                var ht = "";
+    
+                $.each(responseJSON, function(i, val) {
+                    ht += `
+                        <li>${JSON.stringify(val)}</li>
+                    `;
+                });
+    
+                console.log(ht);
+    
+                $("#postList").html(ht);
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+                console.log(`${xhr.status}: ${thrownError}`);
+                $("#errorDiv").html(`${xhr.status}: ${thrownError}`);
+            }
+        });
+    }
 
     $("#postPost").on("submit", function(event) {
         event.preventDefault();
@@ -32,17 +34,27 @@ $(document).ready(function() {
             "title": $("#ptitle").val(),
             "content": $("#pcontent").val(),
             "author": $("#pauthor").val(),
-            "datePublished": $("#pdatePublished").val(),
+            "publishedDate": $("#pdatePublished").val(),
         };
 
         $.ajax({
             url: url,
+            dataType: 'json',
+            type: 'post',
             contentType: 'application/json',
             data: JSON.stringify(req),
-            dataType: 'application/json',
-            type: 'POST',
-            success: function(resposneJSON) {
-                refreshList();
+            processData: false,
+            success: function(responseJSON){
+                console.log("success create");
+                var ht = `
+                        <li>${JSON.stringify(responseJSON)}</li>
+                    `;
+    
+                $("#postList").append(ht);
+            },
+            error: function( xhr, textStatus, thrownError) {
+                console.log(`${xhr.status}: ${thrownError}`);
+                $("#errorDiv").html(`${xhr.status}: ${thrownError}`);
             }
         });
     });
@@ -52,10 +64,24 @@ $(document).ready(function() {
 
         $.ajax({
             url: url + $("#dpostId").val(),
-            dataType: 'application/json',
             type: 'DELETE',
-            success: function(resposneJSON) {
-                refreshList();
+            success: function(responseJSON) {
+                console.log("success delete");
+                var ht = "";
+    
+                $.each(responseJSON, function(i, val) {
+                    ht += `
+                        <li>${JSON.stringify(val)}</li>
+                    `;
+                });
+    
+                console.log(ht);
+    
+                $("#postList").html(ht);
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+                console.log(`${xhr.status}: ${thrownError}`);
+                $("#errorDiv").html(`${xhr.status}: ${thrownError}`);
             }
         });
     });
@@ -65,6 +91,9 @@ $(document).ready(function() {
 
         var req = {};
 
+        if (($("#upostId").val()).length > 0) {
+            req["id"] = $("#upostId").val();
+        }
         if (($("#utitle").val()).length > 0) {
             req["title"] = $("#utitle").val();
         }
@@ -75,17 +104,33 @@ $(document).ready(function() {
             req["author"] = $("#uauthor").val();
         }
         if (($("#udatePublished").val()).length > 0) {
-            req["datePublished"] = $("#udatePublished").val();
+            req["publishedDate"] = $("#udatePublished").val();
         }
 
         $.ajax({
-            url: url,
+            url: url + $("#upostId").val(),
+            dataType: 'json',
+            type: 'put',
             contentType: 'application/json',
             data: JSON.stringify(req),
-            dataType: 'application/json',
-            type: 'PUT',
-            success: function(resposneJSON) {
-                refreshList();
+            processData: false,
+            success: function(responseJSON){
+                console.log("success update");
+                var ht = "";
+    
+                $.each(responseJSON, function(i, val) {
+                    ht += `
+                        <li>${JSON.stringify(val)}</li>
+                    `;
+                });
+    
+                console.log(ht);
+    
+                $("#postList").html(ht);
+            },
+            error: function( xhr, textStatus, thrownError) {
+                console.log(`${xhr.status}: ${thrownError}`);
+                $("#errorDiv").html(`${xhr.status}: ${thrownError}`);
             }
         });
     });

@@ -6,6 +6,7 @@ const cors = require('cors')
 let app = express();
 
 app.use(morgan("dev"));
+app.use(cors());
 
 var jsonParser = bodyParser.json();
 
@@ -42,7 +43,7 @@ app.listen("8080", () => {
     console.log("Listening on port 8080");
 });
 
-app.get("/blog-posts", cors(), (req, res, next) => {
+app.get("/blog-posts", (req, res, next) => {
     res.status(200).json(blogPosts);
 });
 
@@ -80,6 +81,7 @@ app.post("/blog-posts", jsonParser, (req, res) => {
             missingFields.push(field);
         }
     });
+    console.log(missingFields);
 
     if (validObject) {
         jsonObject["id"] = uuidv4();
@@ -108,6 +110,7 @@ app.delete("/blog-posts/:id", (req, res) => {
 });
 
 app.put("/blog-posts/:id", jsonParser, (req, res) => {
+    console.log(req.body);
     let post_id = req.params.id;
     if (req.body["id"] === undefined) {
         res.status(406).json({message: "ID missing in request body",
